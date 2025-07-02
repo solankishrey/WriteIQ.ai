@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup | Writiq.AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] flex items-center justify-center p-4 text-white">
+
+  <div class="w-full max-w-md">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <a href="/" class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+        Writiq.AI
+      </a>
+      <p class="text-gray-300 mt-2 text-sm">Start your AI-powered writing journey</p>
+    </div>
+
+    <!-- Signup Card -->
+    <div class="bg-[#121826] shadow-2xl rounded-xl backdrop-blur-md border border-white/10">
+      <div class="p-6">
+        <h2 class="text-2xl font-bold text-center text-white">Create Account</h2>
+        <p class="text-center text-sm text-gray-400 mt-1">
+          Sign up to start generating professional content
+        </p>
+
+        <!-- MESSAGES -->
+        {% if messages %}
+          <div class="mt-4">
+            {% for message in messages %}
+              <div class="bg-red-500/10 text-red-300 border border-red-500/30 text-sm rounded px-4 py-2 my-2">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <form method="POST" action="{% url 'signup' %}" class="space-y-4 px-6 pb-6">
+        {% csrf_token %}
+
+        <!-- Name Fields -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="firstName" class="block text-sm font-medium text-gray-300">First Name</label>
+            <div class="relative">
+              <input type="text" id="firstName" name="firstName" placeholder="John"
+                     class="pl-10 py-2 border border-gray-600 bg-transparent text-white rounded w-full" required>
+              <span class="absolute left-3 top-2.5 text-gray-400">👤</span>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label for="lastName" class="block text-sm font-medium text-gray-300">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Doe"
+                   class="py-2 px-3 border border-gray-600 bg-transparent text-white rounded w-full" required>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+          <div class="relative">
+            <input type="email" id="email" name="email" placeholder="john@example.com"
+                   class="pl-10 py-2 border border-gray-600 bg-transparent text-white rounded w-full" required>
+            <span class="absolute left-3 top-2.5 text-gray-400">📧</span>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+          <div class="relative">
+            <input type="password" id="password" name="password" placeholder="Create a strong password"
+                   class="pl-10 pr-10 py-2 border border-gray-600 bg-transparent text-white rounded w-full" required>
+            <span class="absolute left-3 top-2.5 text-gray-400">🔒</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="space-y-2">
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-300">Confirm Password</label>
+          <div class="relative">
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password"
+                   class="pl-10 py-2 border border-gray-600 bg-transparent text-white rounded w-full" required>
+            <span class="absolute left-3 top-2.5 text-gray-400">🔒</span>
+          </div>
+        </div>
+        
+        <!-- Button -->
+        <button type="submit"
+                class="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white py-2 rounded font-medium">
+          Create Account
+        </button>
+      </form>
+
+      <div class="border-t border-white/10 my-4 mx-6"></div>
+
+      <!-- Footer -->
+      <div class="text-center text-sm text-gray-400 pb-6">
+        Already have an account?
+        <a href="/login" class="text-purple-400 hover:text-purple-500 font-medium">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

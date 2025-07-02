@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black min-h-screen text-white">
+
+  <!-- Header -->
+  <header class="bg-gray-900 border-b border-gray-700 px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+        <p class="text-gray-400">Welcome back! Here's an overview of your platform.</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="/">
+          <button class="bg-gradient-to-r from-black to-blue-700 text-white px-4 py-2 rounded flex items-center">
+            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9.75L12 4l9 5.75V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.75z"/>
+            </svg>
+            Home 
+          </button>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="p-6">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Total Users -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-purple-600 rounded-lg text-2xl">👤</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_users }}</p>
+            <p class="text-gray-400 text-lg">Total Users</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Feedback -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-blue-600 rounded-lg text-2xl">💬</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_feedbacks }}</p>
+            <p class="text-gray-400 text-lg">Total Feedback</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Subscriptions -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-green-600 rounded-lg text-2xl">📦</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_subscriptions }}</p>
+            <p class="text-gray-400 text-lg">Subscriptions</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Generated Content -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-orange-600 rounded-lg text-2xl">📝</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_generated_content }}</p>
+            <p class="text-gray-400 text-lg">Generated Content</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Categories -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-yellow-600 rounded-lg text-2xl">📂</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_categories }}</p>
+            <p class="text-gray-400 text-lg">Categories</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories -->
+      <div class="bg-gray-800 p-6 rounded shadow">
+        <div class="flex items-center">
+          <div class="p-4 bg-pink-600 rounded-lg text-2xl">🗂️</div>
+          <div class="ml-4">
+            <p class="text-3xl font-bold text-white">{{ total_subcategories }}</p>
+            <p class="text-gray-400 text-lg">Subcategories</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
