@@ -1,0 +1,26 @@
+{% extends "header_footer.html" %}
+{% block content %}
+<section class="min-h-screen py-20 px-6 bg-gradient-to-r from-indigo-900 to-slate-900 text-white">
+  <div class="max-w-4xl mx-auto text-center mb-12">
+    <h2 class="text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-red-400 bg-clip-text text-transparent">
+      Help & Support
+    </h2>
+    <p class="text-lg text-gray-200">
+      Need assistance? We're here to guide you.
+    </p>
+  </div>
+  <div class="max-w-5xl mx-auto bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-10 shadow-xl space-y-6">
+    <div>
+      <h3 class="text-2xl font-semibold text-cyan-300 mb-2">FAQs</h3>
+      <ul class="space-y-4 text-gray-100">
+        <li><strong>Q:</strong> Is Writiq free?<br><strong>A:</strong> Yes, we offer a free plan with basic features.</li>
+        <li><strong>Q:</strong> Can I cancel anytime?<br><strong>A:</strong> Absolutely, you're in control of your subscription.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-2xl font-semibold text-pink-400 mt-6 mb-2">Need More Help?</h3>
+      <p>Contact our team via <u>writiq.support@gmail.com</u> or visit our <a href="{% url 'contact' %}" class="underline text-blue-300">Contact Page</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

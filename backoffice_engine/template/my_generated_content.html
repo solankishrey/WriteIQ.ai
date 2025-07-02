@@ -1,0 +1,160 @@
+{% extends "header_footer.html" %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-8">
+  <h1 class="text-3xl font-semibold text-white mb-4">My Generated Documents</h1>
+
+  <!-- Filter Section -->
+  <div class="bg-gray-800 p-4 rounded-lg mb-6 flex gap-4 flex-wrap">
+    <div>
+      <label class="block text-sm text-gray-300 mb-1">Category</label>
+      <select id="filterCategory" class="w-52 bg-black text-white border rounded px-3 py-2">
+        <option value="">All Categories</option>
+        <option value="Letter">Letter</option>
+        <option value="Application">Application</option>
+        <option value="Email">Email</option>
+        <option value="Resume/CV">Resume/CV</option>
+        <option value="Essay">Essay</option>
+        <option value="Report">Report</option>
+        <option value="Proposal">Proposal</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm text-gray-300 mb-1">Sub-Category</label>
+      <select id="filterSubCategory" class="w-52 bg-black text-white border rounded px-3 py-2">
+        <option value="">All Sub-Categories</option>
+      </select>
+    </div>
+  </div>
+
+  {% if documents %}
+    <div class="grid md:grid-cols-2 gap-6">
+      {% for doc in documents %}
+        <div class="bg-gray-900 border border-gray-700 rounded-lg p-4 space-y-2 document-item"
+             data-id="{{ doc.id }}"
+             data-content="{{ doc.content|escapejs }}"
+             data-category="{{ doc.category_id.name }}"
+             data-sub-category="{{ doc.sub_category_id.name }}">
+          <h2 class="font-semibold text-white text-lg">{{ doc.prompt|truncatechars:60 }}</h2>
+          <p class="text-sm text-gray-400">{{ doc.category_id.name }} > {{ doc.sub_category_id.name }}</p>
+          <p class="text-sm text-gray-500 line-clamp-4">{{ doc.content|truncatechars:250 }}</p>
+
+          <div class="flex gap-3 mt-2">
+            <button onclick="viewContent('{{ doc.id }}')" class="text-sm text-blue-400 hover:underline">View</button>
+            <button onclick="downloadContent('{{ doc.id }}')" class="text-sm text-green-400 hover:underline">Download</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400 text-center mt-10">No documents saved yet. Go to the 
+      <a href="/generator" class="text-blue-400 underline">generator</a> to create one.
+    </p>
+  {% endif %}
+</div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-70 hidden z-50 flex items-center justify-center p-4">
+  <div class="bg-gray-900 rounded-lg shadow-lg max-w-3xl w-full p-6 relative">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-white">Full Content</h2>
+      <div class="flex gap-2">
+        <button onclick="copyModalContent()" class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+          Copy
+        </button>
+        <button onclick="closeModal()" class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition">
+          Close
+        </button>
+      </div>
+    </div>
+    <pre id="modalContent" class="text-white whitespace-pre-wrap max-h-[60vh] overflow-y-auto"></pre>
+  </div>
+</div>
+
+<script>
+  const subCategories = {
+    "Email": ["Welcome Emails", "Transactional Emails", "Newsletters", "Promotional Emails", "Follow-up Emails", "Cold Emails"],
+    "Letter": ["Formal Letter", "Informal Letter", "Business Letter", "Recommendation Letter"],
+    "Application": ["Job Application", "Leave Application", "College Admission Application"],
+    "Resume/CV": ["Fresher Resume", "Experienced Resume", "Creative Resume", "Academic CV"],
+    "Essay": ["Descriptive Essay", "Narrative Essay", "Expository Essay", "Argumentative Essay"],
+    "Report": ["Progress Report", "Incident Report", "Lab Report", "Project Report"],
+    "Proposal": ["Business Proposal", "Research Proposal", "Project Proposal"]
+  };
+
+  const categorySelect = document.getElementById("filterCategory");
+  const subCategorySelect = document.getElementById("filterSubCategory");
+
+  categorySelect.addEventListener("change", () => {
+    const selected = categorySelect.value;
+    const options = subCategories[selected] || [];
+
+    subCategorySelect.innerHTML = '<option value="">All Sub-Categories</option>';
+    options.forEach(subCat => {
+      const opt = document.createElement("option");
+      opt.value = subCat;
+      opt.textContent = subCat;
+      subCategorySelect.appendChild(opt);
+    });
+
+    filterDocuments();
+  });
+
+  subCategorySelect.addEventListener("change", filterDocuments);
+
+  function filterDocuments() {
+    const selectedCategory = categorySelect.value;
+    const selectedSubCategory = subCategorySelect.value;
+
+    document.querySelectorAll(".document-item").forEach(item => {
+      const itemCat = item.dataset.category;
+      const itemSub = item.dataset.subCategory;
+
+      const matchCat = !selectedCategory || itemCat === selectedCategory;
+      const matchSub = !selectedSubCategory || itemSub === selectedSubCategory;
+
+      item.style.display = matchCat && matchSub ? "block" : "none";
+    });
+  }
+
+  function viewContent(id) {
+    const encodedContent = document.querySelector(`[data-id='${id}']`).dataset.content;
+    try {
+      const decoded = JSON.parse(`"${encodedContent.replace(/"/g, '\\"')}"`);
+      document.getElementById("modalContent").textContent = decoded;
+    } catch (err) {
+      document.getElementById("modalContent").textContent = encodedContent;
+    }
+    document.getElementById("modal").classList.remove("hidden");
+  }
+
+  function closeModal() {
+    document.getElementById("modal").classList.add("hidden");
+  }
+
+  function copyModalContent() {
+    const text = document.getElementById("modalContent").innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Content copied to clipboard!");
+    });
+  }
+
+  function downloadContent(id) {
+    const encodedContent = document.querySelector(`[data-id='${id}']`).dataset.content;
+    let decodedContent = encodedContent;
+    try {
+      decodedContent = JSON.parse(`"${encodedContent.replace(/"/g, '\\"')}"`);
+    } catch (e) {
+      console.warn("Fallback to raw content");
+    }
+    const blob = new Blob([decodedContent], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "generated_content_" + id + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  }
+</script>
+{% endblock %}

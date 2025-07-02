@@ -1,0 +1,222 @@
+{% extends "header_footer.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="home" class="text-center py-20 px-4">
+  <span class="inline-block bg-blue-800/30 text-blue-300 px-4 py-1 rounded-full mb-4">✨ AI-Powered Content Generation</span>
+  <h1 class="text-4xl sm:text-6xl font-bold text-white mb-4">
+    Generate Professional <br /><span class="text-blue-400">Documents Instantly</span>
+  </h1>
+  <p class="text-lg text-gray-300 max-w-xl mx-auto mt-4">
+    Create letters, emails, resumes, and reports with powerful AI assistance — fast, accurate, and professional.
+  </p>
+  <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+    {% if request.session.user_id %}
+      <a href="/generator" class="bg-blue-600 px-8 py-4 rounded text-white hover:bg-blue-700">Start Creating</a>
+    {% else %}
+      <a href="/signup" class="bg-blue-600 px-8 py-4 rounded text-white hover:bg-blue-700">Start Creating</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 px-4 bg-gray-900">
+  <div class="text-center mb-12">
+    <h2 class="text-4xl font-bold text-white mb-4">Powerful Content Generation Tools</h2>
+    <p class="text-gray-400 max-w-2xl mx-auto">From business letters to academic essays, create anything with ease.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="file-text"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Professional Letters</h3>
+      <p class="text-gray-400">Generate formal and personalized business letters instantly.</p>
+    </div>
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="mail"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Emails</h3>
+      <p class="text-gray-400">Create outreach, marketing, and formal emails in seconds.</p>
+    </div>
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="user"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Resumes & CVs</h3>
+      <p class="text-gray-400">AI-tailored resumes and CVs built for your industry.</p>
+    </div>
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="book"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Reports</h3>
+      <p class="text-gray-400">Get structured and clear reports on any topic.</p>
+    </div>
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="edit-3"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Essays</h3>
+      <p class="text-gray-400">Write persuasive and academic essays with a click.</p>
+    </div>
+    <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+      <div class="text-blue-400 text-2xl mb-4"><i data-lucide="settings-2"></i></div>
+      <h3 class="text-xl font-semibold mb-2">Custom Templates</h3>
+      <p class="text-gray-400">Build and save your own content templates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Feedback Section -->
+<section class="bg-gray-800 py-16 relative">
+  <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">What Our Users Say</h2>
+
+  <!-- Arrows -->
+  <button id="prevBtn" class="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 p-2 rounded-full text-white">
+    &#10094;
+  </button>
+  <button id="nextBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-gray-700 hover:bg-gray-600 p-2 rounded-full text-white">
+    &#10095;
+  </button>
+
+  <div id="feedbackWrapper" class="overflow-x-auto scrollbar-hide px-4 scroll-smooth">
+    <div id="feedbackSlider" class="flex gap-6 w-max scroll-smooth">
+      {% for f in feedbacks %}
+      <div class="min-w-[300px] max-w-xs bg-gray-900 text-white border border-gray-700 rounded-xl p-6 shadow-lg flex-shrink-0 snap-start">
+        <p class="text-base text-gray-300 italic mb-3">“{{ f.message|truncatechars:150 }}”</p>
+        <div class="flex items-center mb-2">
+          {% for i in "12345" %}
+            {% if forloop.counter <= f.rating|default:0 %}
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <polygon points="9.9,1.1 12.3,6.9 18.6,7.3 13.9,11.5 15.6,17.6 9.9,14.3 4.2,17.6 5.9,11.5 1.2,7.3 7.5,6.9 " />
+              </svg>
+            {% else %}
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <polygon points="9.9,1.1 12.3,6.9 18.6,7.3 13.9,11.5 15.6,17.6 9.9,14.3 4.2,17.6 5.9,11.5 1.2,7.3 7.5,6.9 " />
+              </svg>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <p class="text-sm font-semibold text-blue-400">— {{ f.name }}</p>
+        <p class="text-xs text-gray-500">{{ f.created_at|date:"M d, Y H:i" }}</p>
+      </div>
+      {% endfor %}
+
+      <!-- Duplicate cards for loop -->
+      {% for f in feedbacks %}
+      <div class="min-w-[300px] max-w-xs bg-gray-900 text-white border border-gray-700 rounded-xl p-6 shadow-lg flex-shrink-0 snap-start">
+        <p class="text-base text-gray-300 italic mb-3">“{{ f.message|truncatechars:150 }}”</p>
+        <div class="flex items-center mb-2">
+          {% for i in "12345" %}
+            {% if forloop.counter <= f.rating|default:0 %}
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <polygon points="9.9,1.1 12.3,6.9 18.6,7.3 13.9,11.5 15.6,17.6 9.9,14.3 4.2,17.6 5.9,11.5 1.2,7.3 7.5,6.9 " />
+              </svg>
+            {% else %}
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <polygon points="9.9,1.1 12.3,6.9 18.6,7.3 13.9,11.5 15.6,17.6 9.9,14.3 4.2,17.6 5.9,11.5 1.2,7.3 7.5,6.9 " />
+              </svg>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <p class="text-sm font-semibold text-blue-400">— {{ f.name }}</p>
+        <p class="text-xs text-gray-500">{{ f.created_at|date:"M d, Y H:i" }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Auto Scroll Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById("feedbackSlider");
+    const wrapper = document.getElementById("feedbackWrapper");
+    const nextBtn = document.getElementById("nextBtn");
+    const prevBtn = document.getElementById("prevBtn");
+
+    const cardWidth = 330;
+    let scrollAmount = 0;
+    let direction = 1;
+
+    // Wait a moment before calculating width
+    setTimeout(() => {
+      const original = slider.innerHTML;
+      slider.innerHTML += original;
+      var maxScroll = slider.scrollWidth / 2;
+
+      setInterval(() => {
+        if (direction !== 0) {
+          scrollAmount += 1;
+          slider.scrollLeft = scrollAmount;
+
+          if (scrollAmount >= maxScroll) {
+            scrollAmount = 0;
+            slider.scrollLeft = 0;
+          }
+        }
+      }, 30);
+
+      nextBtn.addEventListener("click", () => {
+        scrollAmount += cardWidth;
+        if (scrollAmount >= maxScroll) scrollAmount = 0;
+        slider.scrollTo({ left: scrollAmount, behavior: "smooth" });
+      });
+
+      prevBtn.addEventListener("click", () => {
+        scrollAmount -= cardWidth;
+        if (scrollAmount < 0) scrollAmount = maxScroll - cardWidth;
+        slider.scrollTo({ left: scrollAmount, behavior: "smooth" });
+      });
+
+      wrapper.addEventListener("mouseenter", () => direction = 0);
+      wrapper.addEventListener("mouseleave", () => direction = 1);
+    }, 300); // delay to ensure DOM loaded
+  });
+</script>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+
+<!-- Feedback CTA -->
+<section class="py-16 bg-gray-900 text-center px-4">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-white">Have Feedback for Us?</h2>
+  <p class="text-gray-400 mb-6 max-w-xl mx-auto">We’d love to hear your thoughts on how we can improve Writiq.AI.</p>
+  <a href="/feedback" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded transition inline-flex items-center gap-2">
+    <i data-lucide="message-square" class="w-5 h-5"></i> Send Feedback
+  </a>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 py-12 px-4 text-sm">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div>
+      <h4 class="text-white font-semibold mb-2">Product</h4>
+      <ul>
+        <li><a href="/features" class="hover:text-white">Features</a></li>
+        <li><a href="/pricing" class="hover:text-white">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-white font-semibold mb-2">Company</h4>
+      <ul>
+        <li><a href="/about" class="hover:text-white">About</a></li>
+        
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-white font-semibold mb-2">Support</h4>
+      <ul>
+        <li><a href="/help" class="hover:text-white">Help Center</a></li>
+        <li><a href="/feedback" class="hover:text-white">Feedback</a></li>
+      </ul>
+    </div>
+    
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+</script>
+{% endblock %}

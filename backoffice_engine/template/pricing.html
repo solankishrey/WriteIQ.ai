@@ -1,0 +1,153 @@
+{% extends "header_footer.html" %}
+{% block content %}
+{% load mathfilters %}
+
+<body class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-950 text-white">
+
+  <!-- Header Section -->
+  <section class="bg-gradient-to-r from-blue-900 to-black border-b border-blue-700 relative">
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <a href="/" class="absolute top-4 right-4">
+        <button class="bg-white text-blue-700 px-4 py-2 rounded hover:bg-blue-100 font-semibold">
+          Home
+        </button>
+      </a>
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Simple, Transparent Subscription</h1>
+        <p class="text-xl text-blue-200 max-w-3xl mx-auto">
+          Choose the perfect plan for your content generation needs. All plans include our powerful AI technology.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Pricing Plans -->
+  <main class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      {% for plan in plans %}
+      <div class="{% if plan.name|lower == 'pro' %}bg-gray-900 ring-2 ring-blue-600 scale-105{% else %}bg-gray-800{% endif %} rounded-lg shadow-lg hover:shadow-xl transition duration-300 relative">
+        
+        {% if plan.name|lower == 'pro' %}
+        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+          <span class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
+        </div>
+        {% endif %}
+        
+        <div class="text-center pt-6 pb-2">
+          <div class="mx-auto mb-4 w-16 h-16 flex items-center justify-center {% if plan.name|lower == 'pro' %}bg-gradient-to-r from-purple-600 to-blue-600{% else %}bg-gray-700{% endif %} rounded-full">
+            {% if plan.name|lower == 'free plan' %}⚡{% elif plan.name|lower == 'gold plan' %}👑{% else %}👥{% endif %}
+          </div>
+          <h2 class="text-2xl font-bold">{{ plan.name }}</h2>
+          <div class="mt-4">
+            <span class="text-4xl font-bold">{{ plan.price }}Rs.</span><span class="text-gray-400">/month</span>
+          </div>
+          <p class="mt-2 text-gray-400">{{ plan.description }}</p>
+        </div>
+
+        <div class="p-6">
+          <ul class="space-y-3 text-gray-300">
+            <li>✔ Valid for {{ plan.duration_days }} days</li>
+            <li>✔ {{ plan.credit }} credits</li>
+            <li>✔ AI templates</li>
+            <li>✔ PDF/Word export</li>
+            <li>✖ Custom branding (Only in Pro)</li>
+          </ul>
+
+          {% if plan.price != 0 %}
+            {% if request.session.user_id %}
+              {% if request.session.plan == plan.id %}
+                <!-- Already Subscribed Message -->
+                <p class="mt-6 text-green-400 text-center font-semibold">Already Subscribed</p>
+              {% else %}
+                <!-- Razorpay Payment Form -->
+                <form
+                  class="text-center"
+                  action="/payment_success/"
+                  method="POST"
+                >
+                  {% csrf_token %}
+                  <input type="hidden" name="plan" value="{{ plan.id }}">
+                  <input type="hidden" name="user_id" value="{{ request.session.user_id }}">
+
+                  <!-- Razorpay Script -->
+                  <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="rzp_test_5XiVCfLShv73N9"
+                    data-amount="{{ plan.price|mul:100 }}"
+                    data-currency="INR"
+                    data-order_id="{{ payment.id }}"
+                    data-buttontext="Pay with Razorpay"
+                    data-name="Writiq.AI Payment"
+                    data-url_root="https://eneqd3r9zrjok.x.pipedream.net/"
+                    data-description="Online Content Generator"
+                    data-image="/client_static/assets/images/shop/logo2.png"
+                    data-prefill.name="SHREY"
+                    data-prefill.email="solankishrey22@gmail.com"
+                    data-theme.color="#F37254"
+                  ></script>
+
+                  <!-- Custom Styled Razorpay Button -->
+                  <button type="button"
+                    onclick="this.parentElement.querySelector('.razorpay-payment-button').click();"
+                    class="w-full mt-4 bg-gradient-to-r from-red-600 to-pink-600 text-white py-2 rounded hover:from-red-700 hover:to-pink-700">
+                    Pay with Razorpay
+                  </button>
+
+                  <style>
+                    .razorpay-payment-button {
+                      display: none !important;
+                    }
+                  </style>
+                </form>
+              {% endif %}
+            {% else %}
+              <!-- Not logged in -->
+              <button onclick="alert('Please log in to continue.')" class="w-full mt-6 bg-gradient-to-r from-red-600 to-pink-600 text-white py-2 rounded hover:from-red-700 hover:to-pink-700">
+                Pay with Razorpay
+              </button>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="mt-20 text-center">
+      <h2 class="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+      <p class="text-xl text-blue-200 mb-12">Everything you need to know about our pricing</p>
+      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        <div>
+          <h3 class="font-semibold text-white mb-2">Can I change my plan anytime?</h3>
+          <p class="text-gray-400">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-white mb-2">Is there a free trial?</h3>
+          <p class="text-gray-400">Yes, we offer a 14‑day free trial for all paid plans. No credit card required.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-white mb-2">What payment methods do you accept?</h3>
+          <p class="text-gray-400">We accept all major credit cards, PayPal, and bank transfers for enterprise plans.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-white mb-2">Can I cancel anytime?</h3>
+          <p class="text-gray-400">Absolutely. You can cancel your subscription at any time with no cancellation fees.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="mt-20 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-12 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
+      <p class="text-xl text-purple-100 mb-8">Join thousands of professionals who trust Writiq.AI</p>
+      <a href="/signup">
+        <button class="bg-white text-purple-700 hover:bg-gray-100 text-lg font-semibold py-2 px-6 rounded">
+          Start Your Free Trial
+        </button>
+      </a>
+    </section>
+  </main>
+
+</body>
+{% endblock %}

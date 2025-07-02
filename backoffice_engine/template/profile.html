@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile | Writiq.AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-black text-white">
+
+  <!-- Header -->
+  <header class="bg-gray-900 border-b border-gray-700 shadow sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+      <div class="text-2xl font-bold text-blue-500">Writiq.AI</div>
+      <ul class="flex items-center space-x-6 text-sm font-medium">
+        <li><a href="/home" class="text-gray-300 hover:text-blue-400">Home</a></li>
+        <li><a href="/dashboard" class="text-gray-300 hover:text-blue-400">Dashboard</a></li>
+        <li><a href="/generator" class="text-gray-300 hover:text-blue-400">Generate Content</a></li>
+        <li><a href="/logout" class="text-red-500 hover:text-red-700">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Profile Display -->
+  <section class="py-20 px-4 max-w-3xl mx-auto text-center">
+    <div class="mb-8">
+      <i data-lucide="user" class="w-12 h-12 text-blue-400 mx-auto"></i>
+      <h1 class="text-3xl font-bold mt-4">My Profile</h1>
+
+      <p class="text-lg text-white mt-4"><strong>Name:</strong> {{ e.name }}</p>
+      <p class="text-lg text-white"><strong>Email:</strong> {{ e.email }}</p>
+      <p class="text-lg text-white"><strong>Plan:</strong> {{ plan_name }}</p>
+
+      {% if start_date and end_date %}
+        <p class="text-lg text-white"><strong>Start Date:</strong> {{ start_date|date:"F j, Y" }}</p>
+        <p class="text-lg text-white"><strong>End Date:</strong> {{ end_date|date:"F j, Y" }}</p>
+      {% endif %}
+
+      <p class="text-lg text-white"><strong>Total Credits:</strong> {{ total_credits }}</p>
+      <p class="text-lg text-white"><strong>Remaining Credits:</strong> {{ pending_credits }}</p>
+
+      <div class="mt-6">
+        <a href="/updated_profile/{{ e.id }}/" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded text-white transition">
+          Edit Profile
+        </a>
+        <a href="/delete_account/{{ e.id }}/" onclick="return confirm('Are you sure you want to delete your account?')" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded text-white transition mt-4 inline-block">
+          Delete Account
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+    &copy; 2025 Writiq.AI. All rights reserved.
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

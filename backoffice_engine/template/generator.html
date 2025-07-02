@@ -1,0 +1,249 @@
+{% extends "header_footer.html" %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 max-w-7xl mx-auto space-y-8">
+  <div class="text-right text-green-400 font-semibold text-sm">
+    Credits Remaining: <span id="creditCount">{{ pending_credits }}</span>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Input Panel -->
+    <div class="space-y-6">
+      <div class="bg-gray-900 shadow-lg rounded-lg">
+        <div class="p-6 border-b border-gray-700">
+          <h2 class="flex items-center text-lg font-semibold text-white">
+            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i> Document Settings
+          </h2>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="text-sm font-medium block mb-2">Document Type</label>
+            <select id="categorySelect" class="w-full border rounded px-3 py-2 bg-black text-white">
+              <option selected disabled>Select document Category</option>
+              <option value="Letter">Letter</option>
+              <option value="Application">Application</option>
+              <option value="Email">Email</option>
+              <option value="Resume/CV">Resume/CV</option>
+              <option value="Essay">Essay</option>
+              <option value="Report">Report</option>
+              <option value="Proposal">Proposal</option>
+              <option value="Other">Other</option>
+
+            </select>
+          </div>
+          <div>
+            <label class="text-sm font-medium block mb-2">Document Sub-Category</label>
+            <select id="subCategorySelect" class="w-full border rounded px-3 py-2 bg-black text-white">
+              <option selected disabled>Select Sub-Category</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm font-medium block mb-2">Creativity</label>
+            <select id="creativitySelect" class="w-full border rounded px-3 py-2 bg-black text-white">
+              <option disabled selected>Select Creativity</option>
+              <option value="0">0%</option>
+              <option value="5">5%</option>
+              <option value="10">10%</option>
+              <option value="15">15%</option>
+              <option value="20">20%</option>
+              <option value="25">25%</option>
+              <option value="30">30%</option>
+              <option value="35">35%</option>
+              <option value="40">40%</option>
+              <option value="45">45%</option>
+              <option value="50">50%</option>
+              <option value="55">55%</option>
+              <option value="60">60%</option>
+              <option value="65">65%</option>
+              <option value="70">70%</option>
+              <option value="75">75%</option>
+              <option value="80">80%</option>
+              <option value="85">85%</option>
+              <option value="90">90%</option>
+              <option value="95">95%</option>
+              <option value="100">100%</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-900 shadow-lg rounded-lg">
+        <div class="p-6 border-b border-gray-700">
+          <h2 class="text-lg font-semibold text-white">Content Prompt</h2>
+        </div>
+        <div class="p-6">
+          <textarea id="promptInput" rows="8" class="w-full border rounded p-3 resize-none bg-black text-white"
+            placeholder="Example: Write a cover letter for a software engineer position..."></textarea>
+          <button id="generateBtn"
+            class="mt-4 w-full text-white px-4 py-2 rounded bg-gradient-to-r from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600 flex items-center justify-center">
+            <i data-lucide="wand-2" class="w-4 h-4 mr-2"></i> Generate Content
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="bg-gray-900 shadow-lg rounded-lg h-full flex flex-col">
+      <div class="p-6 flex justify-between items-center border-b border-gray-700">
+        <h2 class="text-lg font-semibold text-white">Generated Content</h2>
+        <div class="flex gap-2">
+          <button id="copyBtn"
+            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm flex items-center">
+            <i data-lucide="clipboard" class="w-4 h-4 mr-1"></i> Copy
+          </button>
+          <button id="saveBtn"
+            class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm flex items-center">
+            <i data-lucide="save" class="w-4 h-4 mr-1"></i> Save
+          </button>
+        </div>
+      </div>
+      <div class="p-6 flex-1 overflow-auto" id="outputArea">
+        <div class="text-gray-500 text-center mt-24" id="defaultMessage">
+          <i data-lucide="file-text" class="h-16 w-16 mx-auto mb-4 text-gray-600"></i>
+          <p class="text-lg font-medium text-white">No content generated yet</p>
+          <p class="text-sm text-gray-400">Fill in the details and click "Generate Content" to get started</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center">
+  <div class="text-center">
+    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+    <p class="text-white mt-4 text-lg font-medium">Generating...</p>
+  </div>
+</div>
+
+<script>
+  const subCategories = {
+    "Email": ["Welcome Emails", "Transactional Emails", "Newsletters", "Promotional Emails", "Follow-up Emails", "Cold Emails","other"],
+    "Letter": ["Formal Letter", "Informal Letter", "Business Letter", "Recommendation Letter","other"],  
+    "Application": ["Job Application", "Leave Application", "College Admission Application","other"],
+    "Resume/CV": ["Fresher Resume", "Experienced Resume", "Creative Resume", "Academic CV","other"],
+    "Essay": ["Descriptive Essay", "Narrative Essay", "Expository Essay", "Argumentative Essay","other"],
+    "Report": ["Progress Report", "Incident Report", "Lab Report", "Project Report","other"],
+    "Proposal": ["Business Proposal", "Research Proposal", "Project Proposal","other"],
+    "Other":  ["Dialogue","Newsletter","Research Paper","Thesis Summary","Invitation","Statement of Purpose","Other"]
+  };
+
+  const categorySelect = document.getElementById('categorySelect');
+  const subCategorySelect = document.getElementById('subCategorySelect');
+  const creditDisplay = document.getElementById("creditCount");
+
+  let contentGenerated = false;
+
+  categorySelect.addEventListener('change', function () {
+    const selected = this.value;
+    const options = subCategories[selected] || [];
+    subCategorySelect.innerHTML = '<option selected disabled>Select Sub-Category</option>';
+    options.forEach(subCat => {
+      const opt = document.createElement('option');
+      opt.value = subCat;
+      opt.textContent = subCat;
+      subCategorySelect.appendChild(opt);
+    });
+  });
+
+  document.getElementById("generateBtn").addEventListener("click", async function () {
+    const docType = categorySelect.value;
+    const subCat = subCategorySelect.value;
+    const creativity = document.getElementById("creativitySelect").value;
+    const prompt = document.getElementById("promptInput").value;
+    const currentCredits = parseInt(creditDisplay.innerText);
+
+    if (currentCredits <= 0) {
+      alert("You are out of credits. Please upgrade your plan.");
+      return;
+    }
+
+    if (!docType || !subCat || !creativity || !prompt) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    document.getElementById("loadingOverlay").classList.remove("hidden");
+
+    const formData = new FormData();
+    formData.append("doc_type", docType);
+    formData.append("sub_category", subCat);
+    formData.append("creativity", creativity);
+    formData.append("prompt", prompt);
+
+    const response = await fetch("/generate_content/", {
+      method: "POST",
+      body: formData,
+    });
+
+    const text = await response.text();
+    document.getElementById("outputArea").innerHTML = `<div class="whitespace-pre-wrap text-white">${text}</div>`;
+    document.getElementById("loadingOverlay").classList.add("hidden");
+
+    // Reduce credit & update flag
+    creditDisplay.innerText = currentCredits - 1;
+    contentGenerated = true;
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", function () {
+    if (!contentGenerated) {
+      alert("Please generate content first.");
+      return;
+    }
+    const content = document.getElementById("outputArea").innerText.trim();
+    navigator.clipboard.writeText(content).then(() => {
+      alert("Content copied to clipboard!");
+    });
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", async function () {
+    if (!contentGenerated) {
+      alert("Please generate content first.");
+      return;
+    }
+
+    const content = document.getElementById("outputArea").innerText.trim();
+    const prompt = document.getElementById("promptInput").value.trim();
+    const categoryName = document.getElementById("categorySelect").value;
+    const subCategoryName = document.getElementById("subCategorySelect").value;
+
+    const csrftoken = getCookie("csrftoken");
+
+    const response = await fetch("/save_generated_content/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: content,
+        prompt: prompt,
+        category: categoryName,
+        sub_category: subCategoryName
+      }),
+    });
+
+    if (response.ok) {
+      alert("Content saved successfully!");
+    } else {
+      alert("Failed to save content.");
+    }
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  lucide.createIcons();
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "header_footer.html" %}
+ {% block content %}
+
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Navigation -->
+  <header class="bg-white shadow p-4">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-purple-700">Writiq.AI</h1>
+      <ul class="flex space-x-4">
+        <li><a href="index.html" class="hover:underline">Home</a></li>
+        <li><a href="login.html" class="hover:underline">Login</a></li>
+        <li><a href="signup.html" class="hover:underline">Signup</a></li>
+        <li><a href="dashboard.html" class="hover:underline">Dashboard</a></li>
+        <li><a href="generator.html" class="hover:underline">Generator</a></li>
+        <li><a href="pricing.html" class="hover:underline">Pricing</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-4">App Shell</h2>
+    <p class="text-gray-600">This page acts as the central navigation point for all routes in your app.</p>
+    <p class="mt-4">Click any of the links in the navigation above to go to different pages like Login, Signup, or Dashboard.</p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center mt-16 py-6 text-gray-500 text-sm border-t">
+    &copy; 2025 Writiq.AI. All rights reserved.
+  </footer>
+
+</body>
+</html>
+{% endfor %}

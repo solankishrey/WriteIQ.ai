@@ -1,0 +1,71 @@
+{% extends "header_footer.html" %}
+{% block content %}
+<body class="bg-gray-950 text-white min-h-screen">
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4 bg-gray-900">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-white mb-4">Powerful Content Generation Tools</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto">From business letters to academic essays, create anything with ease.</p>
+    </div>
+
+    <!-- Form starts here -->
+    <form method="POST" action="{% url 'features' %}" class="max-w-7xl mx-auto">
+      {% csrf_token %}
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="file-text"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Professional Letters</h3>
+          <p class="text-gray-400">Generate formal and personalized business letters instantly.</p>
+        </div>
+
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="mail"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Emails</h3>
+          <p class="text-gray-400">Create outreach, marketing, and formal emails in seconds.</p>
+        </div>
+
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="user"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Resumes & CVs</h3>
+          <p class="text-gray-400">AI-tailored resumes and CVs built for your industry.</p>
+        </div>
+
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="book"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Reports</h3>
+          <p class="text-gray-400">Get structured and clear reports on any topic.</p>
+        </div>
+
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="edit-3"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Essays</h3>
+          <p class="text-gray-400">Write persuasive and academic essays with a click.</p>
+        </div>
+
+        <div class="p-6 border border-gray-700 rounded-lg hover:border-blue-500 transition">
+          <div class="text-blue-400 text-2xl mb-4"><i data-lucide="settings-2"></i></div>
+          <h3 class="text-xl font-semibold mb-2">Custom Templates</h3>
+          <p class="text-gray-400">Build and save your own content templates.</p>
+        </div>
+
+      </div>
+
+      <!-- Optional Submit Button for the Form -->
+      <div class="text-center mt-10">
+        <button type="submit"
+          class="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white py-2 px-6 rounded font-medium">
+          Submit Feature Request
+        </button>
+      </div>
+    </form>
+    <!-- Form ends here -->
+
+  </section>
+
+  <script>
+    lucide.createIcons();
+  </script>
+{% endblock %}
